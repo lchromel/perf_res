@@ -136,26 +136,34 @@ def process_image(image_path, headline, subtitle, disclaimer, output_path="resul
                 if disclaimer:
                     disclaimer_lines = wrap_text(disclaimer, disclaimer_font, draw, max_text_width)
                     blocks.append((disclaimer_lines, disclaimer_font, 'disclaimer'))
-                # Calculate total height of all blocks (including 24px spacing between blocks)
+                # Calculate total height of all blocks (including spacing between blocks)
                 block_heights = []
                 for lines, font, block_type in blocks:
                     line_spacing = get_line_spacing(font, block_type)
                     block_height = sum([draw.textbbox((0, 0), line, font=font)[3] for line in lines]) + (len(lines)-1)*line_spacing
                     block_heights.append(block_height)
-                total_blocks_height = sum(block_heights) + (len(blocks)-1)*24
+                # Calculate spacings between blocks
+                spacings = []
+                for i in range(len(blocks)-1):
+                    if output_size == (1080, 1920) and blocks[i][2] == 'subheadline' and blocks[i+1][2] == 'disclaimer':
+                        spacings.append(100)
+                    else:
+                        spacings.append(24)
+                total_blocks_height = sum(block_heights) + sum(spacings)
                 # Start y so the whole stack fits above the bottom margin
                 y = out_h - 50 - total_blocks_height  # 50px bottom margin
-                for (lines, font, block_type), block_height in zip(blocks, block_heights):
+                for idx, ((lines, font, block_type), block_height) in enumerate(zip(blocks, block_heights)):
                     line_spacing = get_line_spacing(font, block_type)
-                    for idx, line in enumerate(lines):
+                    for lidx, line in enumerate(lines):
                         w, h = draw.textbbox((0, 0), line, font=font)[2:]
                         x = (out_w - w) // 2
                         draw.text((x, y), line, font=font, fill="white")
-                        if idx < len(lines) - 1:
+                        if lidx < len(lines) - 1:
                             y += h + line_spacing
                         else:
                             y += h
-                    y += 24  # 24px block spacing
+                    if idx < len(spacings):
+                        y += spacings[idx]
             # 1200x628: anchor all text blocks to the top, 40px margin from top, 28px spacing between blocks
             elif output_size == (1200, 628):
                 y = 40
