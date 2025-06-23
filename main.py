@@ -184,11 +184,11 @@ def process_image(image_path, headline, subtitle, disclaimer, output_path="resul
                 if subtitle:
                     subtitle_block_width = 460
                     subtitle_block_x = 80
-                    lines = wrap_text(subtitle, subheadline_font, draw, max_text_width)
+                    lines = wrap_text(subtitle, subheadline_font, draw, subtitle_block_width)
                     line_spacing = int(subheadline_font.size * 0.2)
                     for idx, line in enumerate(lines):
                         w, h = draw.textbbox((0, 0), line, font=subheadline_font)[2:]
-                        x = block_x + (subtitle_block_width - w) // 2
+                        x = subtitle_block_x + (subtitle_block_width - w) // 2
                         draw.text((x, y), line, font=subheadline_font, fill="white")
                         if idx < len(lines) - 1:
                             y += h + line_spacing
