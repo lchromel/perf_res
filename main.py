@@ -146,7 +146,7 @@ def process_image(image_path, headline, subtitle, disclaimer, output_path="resul
                 spacings = []
                 for i in range(len(blocks)-1):
                     if output_size == (1080, 1920) and blocks[i][2] == 'subheadline' and blocks[i+1][2] == 'disclaimer':
-                        spacings.append(100)
+                        spacings.append(164)
                     else:
                         spacings.append(24)
                 total_blocks_height = sum(block_heights) + sum(spacings)
@@ -168,7 +168,7 @@ def process_image(image_path, headline, subtitle, disclaimer, output_path="resul
             elif output_size == (1200, 628):
                 y = 40
                 block_x = 40
-                block_width = 564
+                block_width = 540
                 if headline:
                     lines = wrap_text(headline, headline_font, draw, max_text_width)
                     line_spacing = int(headline_font.size * 0.15)
