@@ -71,7 +71,10 @@ def process_image(image_path, headline, subtitle, disclaimer, output_path="resul
 
             # Cover and crop logic
             out_w, out_h = output_size
-            scale = max(out_w / width, out_h / height)
+            if output_size == (1080, 1920):
+                scale = out_h / height
+            else:
+                scale = max(out_w / width, out_h / height)
             new_w = int(width * scale)
             new_h = int(height * scale)
             resized = base_image.resize((new_w, new_h), Image.LANCZOS)
